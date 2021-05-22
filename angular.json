@@ -1,0 +1,154 @@
+{
+  "version": 1,
+  "cli": {
+    "defaultCollection": "@nrwl/angular"
+  },
+  "defaultProject": "marvel-heroes",
+  "schematics": {
+    "@nrwl/angular": {
+      "application": {
+        "linter": "eslint"
+      },
+      "library": {
+        "linter": "eslint"
+      },
+      "storybook-configuration": {
+        "linter": "eslint"
+      }
+    },
+    "@nrwl/angular:application": {
+      "style": "scss",
+      "linter": "eslint",
+      "unitTestRunner": "jest",
+      "e2eTestRunner": "cypress"
+    },
+    "@nrwl/angular:library": {
+      "style": "scss",
+      "linter": "eslint",
+      "unitTestRunner": "jest"
+    },
+    "@nrwl/angular:component": {
+      "style": "scss"
+    }
+  },
+  "projects": {
+    "marvel-heroes": {
+      "projectType": "application",
+      "root": "apps/marvel-heroes",
+      "sourceRoot": "apps/marvel-heroes/src",
+      "prefix": "achipiga",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "outputPath": "dist/apps/marvel-heroes",
+            "index": "apps/marvel-heroes/src/index.html",
+            "main": "apps/marvel-heroes/src/main.ts",
+            "polyfills": "apps/marvel-heroes/src/polyfills.ts",
+            "tsConfig": "apps/marvel-heroes/tsconfig.app.json",
+            "inlineStyleLanguage": "scss",
+            "assets": [
+              "apps/marvel-heroes/src/favicon.ico",
+              "apps/marvel-heroes/src/assets"
+            ],
+            "styles": ["apps/marvel-heroes/src/styles.scss"],
+            "scripts": []
+          },
+          "configurations": {
+            "production": {
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "500kb",
+                  "maximumError": "1mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "2kb",
+                  "maximumError": "4kb"
+                }
+              ],
+              "fileReplacements": [
+                {
+                  "replace": "apps/marvel-heroes/src/environments/environment.ts",
+                  "with": "apps/marvel-heroes/src/environments/environment.prod.ts"
+                }
+              ],
+              "outputHashing": "all"
+            },
+            "development": {
+              "buildOptimizer": false,
+              "optimization": false,
+              "vendorChunk": true,
+              "extractLicenses": false,
+              "sourceMap": true,
+              "namedChunks": true
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "configurations": {
+            "production": {
+              "browserTarget": "marvel-heroes:build:production"
+            },
+            "development": {
+              "browserTarget": "marvel-heroes:build:development"
+            }
+          },
+          "defaultConfiguration": "development"
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "browserTarget": "marvel-heroes:build"
+          }
+        },
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": [
+              "apps/marvel-heroes/src/**/*.ts",
+              "apps/marvel-heroes/src/**/*.html"
+            ]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "outputs": ["coverage/apps/marvel-heroes"],
+          "options": {
+            "jestConfig": "apps/marvel-heroes/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
+    },
+    "marvel-heroes-e2e": {
+      "root": "apps/marvel-heroes-e2e",
+      "sourceRoot": "apps/marvel-heroes-e2e/src",
+      "projectType": "application",
+      "architect": {
+        "e2e": {
+          "builder": "@nrwl/cypress:cypress",
+          "options": {
+            "cypressConfig": "apps/marvel-heroes-e2e/cypress.json",
+            "tsConfig": "apps/marvel-heroes-e2e/tsconfig.e2e.json",
+            "devServerTarget": "marvel-heroes:serve:development"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "marvel-heroes:serve:production"
+            }
+          }
+        },
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": ["apps/marvel-heroes-e2e/**/*.{js,ts}"]
+          }
+        }
+      }
+    }
+  }
+}
